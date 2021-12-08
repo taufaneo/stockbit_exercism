@@ -12,9 +12,9 @@ Elixir Basic I:
 7. Flatten Array (recursion) - Easy
 
 Elixir Basic II:
-8. List Ops (functional programming) - Medium
-9. Change (algorithms) - Medium
-10. Robot simulator (defstruct) - Medium
-11. Bank Account (OTP) - Medium
+1. List Ops (functional programming) - Medium
+2. Change (algorithms) - Medium >> stil need optimization, two test items still not passed.
+3. Robot simulator (defstruct) - Medium
+4. Bank Account (OTP) - Medium
 
 Except 'Change', all projects have passed the automated test.
