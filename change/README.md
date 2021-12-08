@@ -1,3 +1,8 @@
+# !Note
+This solution has not passed all the automated test, especially for 'large target values' and 'change with Lower Elbonia Coins'.
+My approach to the problem is to contruct a tree of all possible coin combinations, then choose the least number of coins in the tree.
+
+
 # Change
 
 Welcome to Change on Exercism's Elixir Track.
