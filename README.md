@@ -17,4 +17,5 @@ Elixir Basic II:
 3. Robot simulator (defstruct) - Medium
 4. Bank Account (OTP) - Medium
 
-Except 'Change', all projects have passed the automated test.
+~~Except 'Change', all projects have passed the automated test.~~
+**UPDATE Dec 12, 2021: All solutions have passed the automated test.**

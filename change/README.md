@@ -1,6 +1,9 @@
-# !Note
+# Update Dec 12, 2021: This solution has passed all automated tests.
+I changed my approach to the problem. Rather than construct a 'naive' and 'greedy' tree that lists all possible coin combinations, I use dynamic programming approach, which will significantly reduce possible coin combinations. This new approach makes use of the fact that the least number of coins among all the possible combinations for any target value, can be produced from the combinations of additional coins + the least number of coin combinations from lesser amount than the target. Therefore, there's no need to generate all the possible combinations.
+
+~~# !Note
 This solution has not passed all the automated test, especially for 'large target values' and 'change with Lower Elbonia Coins'.
-My approach to the problem is to contruct a tree of all possible coin combinations, then choose the least number of coins in the tree.
+My approach to the problem is to contruct a tree of all possible coin combinations, then choose the least number of coins in the tree.~~
 
 
 # Change
