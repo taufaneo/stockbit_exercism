@@ -16,58 +16,103 @@ defmodule Change do
   """
 
   @spec generate(list, integer) :: {:ok, list} | {:error, String.t()}
+  def generate(_coins, target) when target < 0 do
+    {:error, "cannot change"}
+  end
+
+  def generate(_coins, target) when target == 0 do
+    {:ok, []}
+  end
+
   def generate(coins, target) do
-    result = Enum.reverse(coins) \
-             |> make_change(target, []) \
-             |> find_least_coins([]) \
-             |> Enum.sort()
-    
+    change_map = 1..target
+      |> Enum.reduce(
+        %{0 => []},
+        fn idx, acc ->
+          build_changes(coins, idx, acc)
+        end)
+    result = Map.get(change_map, target)
     cond do
-      result == [] and target != 0 -> {:error, "cannot change"}
+      result == nil and result != [] -> {:error, "cannot change"}
       true -> {:ok, result}
     end
   end
 
-  def make_change(coins, target, changes) do
-    cond do
-      target < 0 ->
-        []
-      target == 0 ->
-        changes
-      target > 0 ->
-        Enum.map(coins, fn c ->
-          make_change(coins, target - c, changes ++ [c])
+  def build_changes(coins, idx, acc) do
+    change_list = coins
+      |> Enum.filter(fn coin -> acc[idx-coin] end)
+      |> Enum.map(fn coin ->
+          list = acc[idx-coin]
+          if coin + Enum.sum(list) == idx do
+            [coin | list]
+          else
+            []
+          end
         end)
+      |> collect_sort([]) 
+      |> remove_duplicates([])
+      |> remove_empty([])
+      |> least_number_of_elements()
+    Map.put(acc, idx, change_list)
+  end
+
+  def collect_sort(lol, new_lol) do
+    case lol do
+      [] -> new_lol
+      [first | rest] ->
+        cond do
+          is_list(first) ->
+            collect_sort(first, new_lol) ++ collect_sort(rest, new_lol)
+          true ->
+            [Enum.sort(lol) | new_lol]
+        end
     end
   end
 
-  def find_least_coins(tree, least_coins) do
-    case tree do
-      [] -> least_coins
-      [first | rest] -> 
-        left = cond do
-          is_list(first) -> find_least_coins(first, least_coins)
-          true -> tree
-        end
-        right = find_least_coins(rest, least_coins)
-        _least =
+  defp remove_duplicates(list, new_list) do
+    case list do
+      [] -> new_list
+      [first | rest] ->
+        remove_duplicates(rest,
           cond do
-            length(left) == 0 and length(right) == 0 -> []
-            length(left) == 0 -> right
-            length(right) == 0 -> left
+            Enum.member?(new_list, first) ->
+              new_list
             true ->
-              sum_left = Enum.reduce(left, 0, fn (x, acc) -> x+acc end)
-              sum_right = Enum.reduce(right, 0, fn(x, acc) -> x+acc end)
-              cond do
-                sum_left > sum_right -> left
-                sum_right > sum_left -> right
-                true -> 
-                  cond do
-                    length(left) < length(right) -> left
-                    true -> right
-                  end
-              end
-          end
+              new_list ++ [first]
+          end)
     end
-  end 
+  end
+
+  defp remove_empty(lol, new_lol) do
+    case lol do
+      [] -> new_lol
+      [first | rest] -> 
+        remove_empty(rest,
+          cond do
+            first == [] or first == [nil] -> new_lol
+            true ->
+              new_lol ++ [first]
+          end)
+    end
+  end
+
+  defp least_number_of_elements(lol) do
+    case lol do
+      [] -> nil
+      [first | rest] ->
+        least_between_two(first, least_number_of_elements(rest))
+    end
+  end
+
+  defp least_between_two(list1, list2) when list2 == nil do
+    list1
+  end
+
+  defp least_between_two(list1, list2) when list2 != nil do
+    if Enum.count(list1) <= Enum.count(list2) do
+        list1
+    else
+      list2
+    end
+  end
 end
